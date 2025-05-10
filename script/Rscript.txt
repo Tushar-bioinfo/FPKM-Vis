@@ -1,0 +1,104 @@
+setwd("/Users/tusharsingh/Documents/Comp_genomics/practice")
+
+
+df <- read.table("/Users/tusharsingh/Downloads/vehicle_drug_feature_counts.txt", header = T , sep = '\t',row.names = 1)
+df_reads <- df[,6:9]
+
+
+########### Question 1 ##################
+fpkm <- apply(df_reads,2, function(x){ x * 10^9 /df$Length/sum(x)})
+
+colnames(fpkm) <- c("c1","c2","t1","t2")
+
+write.table(fpkm,file= "vehicle_drug_feature_counts.fpkm.txt", row.names = T, col.names = T, quote = F)
+
+############# Question 2 #########
+
+par(mar = c(5,5,3,3))
+par(mfrow = c(1,2))
+
+plot(log2(fpkm[,1]),log2(fpkm[,2]), bg = "pink", pch = 21 , las = 1,
+     xlab = "log2(FPKM)",
+     ylab = "log2(FPKM)",
+     cex.axis = 1,
+     cex.lab = 1.1,
+     main = "Vehicle")
+plot(log2(fpkm[,3]),log2(fpkm[,4]), bg = "pink", pch = 21 , las = 1,
+     xlab = "log2(FPKM)",
+     ylab = "log2(FPKM)",
+     cex.axis = 1,
+     cex.lab = 1.1,
+     main = "Drug")
+     
+     
+######## Question 3 ############
+
+library(ggplot2)
+
+normalized_data <- fpkm
+
+par(mar = c(4,5,2,2))
+boxplot(log2(normalized_data), 
+        col = c("orange","orange","purple","purple"),
+        border = c('orange','orange','purple','purple'),
+        medcol = "white",
+        medlwd = 4,
+        whisklty = 3 , 
+        cex = 0.4,
+        cex.axis = 1.1,
+        las = 2,
+        cex.lab =1.5,
+        ylab = "log2( FPKM )")
+        
+############ Question 4 #############
+
+
+par(mfrow = c(2,2))
+i <- 1
+apply(normalized_data,2, function(x){hist(log2(x),
+                                          breaks = 100,
+                                          col = "cyan",
+                                          xlim = c(-5, 15), 
+                                          ylim = c(-5, 200),
+                                          xlab = paste('log2(FPKM)',colnames(normalized_data)[i]),
+                                          main = paste('Histogram of', colnames(normalized_data)[i]))
+  i <<- i + 1
+  print(quantile(x,0.15))
+  })
+
+
+########## Question 5 #########
+
+#heatmap drawing
+library(ggplot2)
+ggplot(data = melted_corF, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() 
+
+########### trying Question 5 with a diff way #########
+
+
+library(ggplot2)
+library(reshape2)
+
+corF <- cor(normalized_data)
+melted_corF <- melt(corF)
+
+get_upper_tri<-function(cormat){
+  cormat[lower.tri(cormat)] <- NA
+  return(cormat)
+}
+
+upper_tri <- get_upper_tri(corF)
+melted_upper_tri <- melt( upper_tri )
+
+
+ggplot(data = melted_upper_tri, aes(Var2, Var1, fill = value))+
+  geom_tile(color = "black")+
+  scale_fill_gradient2(low = "white", high = "orange", mid = "yellow", 
+                       midpoint = 0.9, limit = c(0.8,1), 
+                       #space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal()+ 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+                                   size = 12, hjust = 1))+
+  coord_fixed()
