@@ -1,4 +1,4 @@
-# FPKM-Normalization-and-Visualization
+# FPKM Normalization and Visualization
 This project performs a comprehensive quality assessment of RNA-Seq data using FPKM (Fragments Per Kilobase of transcript per Million mapped reads) normalization, followed by multiple visualizations to evaluate biological replicates and assay consistency.
 
 Input: Raw read count matrix (featureCounts) with gene lengths and four samples: vehicle_rep1, vehicle_rep2, drug_rep1, and drug_rep2.
