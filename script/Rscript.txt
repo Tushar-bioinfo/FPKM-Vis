@@ -4,7 +4,7 @@ setwd("/Users/tusharsingh/Documents/Comp_genomics/practice")
 df <- read.table("/Users/tusharsingh/Downloads/vehicle_drug_feature_counts.txt", header = T , sep = '\t',row.names = 1)
 df_reads <- df[,6:9]
 
-
+ 
 ########### Question 1 ##################
 fpkm <- apply(df_reads,2, function(x){ x * 10^9 /df$Length/sum(x)})
 
