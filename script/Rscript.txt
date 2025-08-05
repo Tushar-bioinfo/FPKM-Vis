@@ -7,7 +7,7 @@ df_reads <- df[,6:9]
   
 ########### Question 1 ##################
 fpkm <- apply(df_reads,2, function(x){ x * 10^9 /df$Length/sum(x)})
-
+ 
 colnames(fpkm) <- c("c1","c2","t1","t2")
 
 write.table(fpkm,file= "vehicle_drug_feature_counts.fpkm.txt", row.names = T, col.names = T, quote = F)
