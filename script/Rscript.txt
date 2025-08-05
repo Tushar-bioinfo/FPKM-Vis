@@ -16,7 +16,7 @@ write.table(fpkm,file= "vehicle_drug_feature_counts.fpkm.txt", row.names = T, co
 
 par(mar = c(5,5,3,3))
 par(mfrow = c(1,2))
-
+ 
 plot(log2(fpkm[,1]),log2(fpkm[,2]), bg = "pink", pch = 21 , las = 1,
      xlab = "log2(FPKM)",
      ylab = "log2(FPKM)",
